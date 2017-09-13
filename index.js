@@ -5,7 +5,7 @@ const Moment = require('moment')
 const Config = require('./config')
 
 Moment.locale('fr')
-Moment().utcOffset(120)
+Moment.utc(120)
 Moment.updateLocale('fr', {
   calendar: {
     sameDay: '[Auj à] LT',
