@@ -15,8 +15,8 @@ Ressource.createURL = function(ressources, nbWeeks) {
         '&nbWeeks=' + nbWeeks
 }
 
-Ressource.getId = function(formation, year, departement, semester, speciality) {
-  return Config[formation][year][departement]['semesters'][semester][speciality]
+Ressource.getId = function(formation, departement, semester, speciality) {
+  return Config[formation][departement]['semesters'][semester][speciality]
 }
 
 module.exports = Ressource
