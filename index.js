@@ -1,11 +1,11 @@
 const Discord = require('discord.js')
 var ical = require('ical')
 const Ressource = require('./ressource')
-const Moment = require('moment')
+const Moment = require('moment-timezone')
 const Config = require('./config')
 
 Moment.locale('fr')
-Moment.utc(120)
+Moment.tz.setDefault('Europe/Paris')
 Moment.updateLocale('fr', {
   calendar: {
     sameDay: '[Auj à] LT',
