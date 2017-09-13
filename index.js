@@ -23,15 +23,9 @@ const today = 0
 const bot = new Discord.Client()
 
 bot.on('ready', function() {
-  bot.user.setGame('testingtests')
-  bot.user.setUsername('testingbots')
+  bot.user.setGame('EDT M2 S1 INFO')
+  bot.user.setUsername('EDT bot')
 })
-
-// now
-// next
-// today
-// tomorrow
-// link
 
 bot.on('message', function(message) {
 
