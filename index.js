@@ -138,6 +138,21 @@ bot.on('message', function(message) {
           Ressource.getId('master', 2, 'info', 1, messageArray[1]) +
           '&projectId=54')
     }
+  } else if (messageArray[0] === '!help') {
+    message.channel.send('**Commandes** : \n' +
+        '`!now !next !today !tomorrow !link`\n\n' +
+        '**Specialities**\n' +
+        '`[info | aigle | decol | imagina | mit | msi]`\n\n' +
+        '`!now` displays the information of the actuals classes\n' +
+        '  _usage_ : `!now <speciality>`\n\n' +
+        '`!next` displays the informations of the folowwing classes\n' +
+        '  _usage_ : `!next <speciality>`\n\n' +
+        '`!today` displays today\'s classes\n' +
+        '  _usage_ : `!today <speciality> [left]`\n\n' +
+        '`!tomorrow`  displays tomorrow\'s classes\n' +
+        '  _usage_ : `!tomorrow <speciality>`\n\n' +
+        '`!link` : creates a link to the original EDT for the wanted speciality\n' +
+        '  _usage_ : `link <speciality>`')
   }
 })
 
