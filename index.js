@@ -1,18 +1,22 @@
+"use strict"
+
 const Discord = require('discord.js')
 const Ical = require('ical')
 const Moment = require('moment-timezone')
 const Config = require('./config')
 
+const edt = require('./edt')
 const Ressource = require('./ressource')
-const EventDecorator = require('./eventdecorator')
+const EventFactory = require('./event-factory')
+const EventWrapper = require('./event-wrapper')
 
 Moment.locale('fr')
 Moment.tz.setDefault('Europe/Paris')
 Moment.updateLocale('fr', {
-  calendar: {
-    sameDay: '[Auj de] LT',
-    nextDay: '[Demain de] LT',
-  },
+    calendar: {
+        sameDay: '[Auj de] LT',
+        nextDay: '[Demain de] LT',
+    },
 })
 
 // RSS : https://planning-ade.umontpellier.fr/direct/gwtdirectplanning/rss?projectId=54&resources=4800&cliendId=1505246956191&nbDays=15&since=0&login=visuFDS&password=12345678
@@ -24,140 +28,36 @@ const today = 0
 
 const bot = new Discord.Client()
 
-bot.on('ready', function() {
-  if (bot.game !== 'EDT M2 S1 INFO') {
-    bot.user.setGame('EDT M2 S1 INFO')
-  }
-  if (bot.user.username !== 'EDT Bot') {
-    bot.user.setUsername('EDT Bot')
-  }
+bot.on('ready', function () {
+    if (bot.game !== 'EDT M2 S1 INFO') {
+        bot.user.setGame('EDT M2 S1 INFO')
+    }
+    if (bot.user.username !== 'EDT Bot') {
+        bot.user.setUsername('EDT Bot')
+    }
 })
 
-bot.on('message', function(message) {
+bot.on('message', function (message) {
 
-  if (message.content.charAt(0) !== '!') {
-    return
-  }
-
-  var messageArray = message.content.split(' ')
-
-  if (messageArray.length === 2 && messageArray[0] === '!now') {
-    if (Config.master2.info.specialities.indexOf(messageArray[1]) !== -1) {
-      Ical.fromURL(
-          Ressource.createURL(
-              Ressource.getId('master2', 'info', 1, messageArray[1]), today),
-          {},
-          function(err, data) {
-            var events = []
-
-            for (var k in data) {
-              var event = data[k]
-
-              if (Moment().isBetween(Moment(event.start), Moment(event.end))) {
-                events.push(event)
-              }
-            }
-
-            message.channel.send(EventDecorator.format(events))
-          })
+    if (message.content.charAt(0) !== '!') {
+        return
     }
-  } else if (messageArray.length === 2 && messageArray[0] === '!next') {
-    if (Config.master2.info.specialities.indexOf(messageArray[1]) !== -1) {
 
-      Ical.fromURL(
-          Ressource.createURL(
-              Ressource.getId('master2', 'info', 1, messageArray[1]), 2),
-          {},
-          function(err, data) {
-            var events = []
-            var minMoment
+    var args = message.content.split(' ')
 
-            for (var k in data) {
-              var event = data[k]
-
-              if (Moment().isBefore(event.start)) {
-                if (minMoment !== undefined) {
-                  if (minMoment.isAfter(event.start)) {
-                    minMoment = Moment(event.start)
-                    events = [event]
-                  } else if (minMoment.isSame(event.start)) {
-                    events.push(event)
-                  }
-                } else {
-                  minMoment = Moment(event.start)
-                  events = [event]
-                }
-              }
-            }
-            message.channel.send(EventDecorator.format(events))
-          })
-
+    if (args[0] === '!now') {
+        edt.now(message, args)
+    } else if (args[0] === '!next') {
+        edt.next(message, args)
+    } else if (args[0] === '!today') {
+        edt.today(message, args)
+    } else if (args[0] === '!tomorrow') {
+        edt.tomorrow(message, args)
+    } else if (args.length === 2 && args[0] === '!link') {
+        edt.link(message, args)
+    } else if (args[0] === '!help') {
+        message.channel.send(edt.help())
     }
-  } else if (messageArray.length >= 2 && messageArray[0] === '!today') {
-    if (messageArray.length === 2) {
-      messageArray.push('')
-    }
-    if (Config.master2.info.specialities.indexOf(messageArray[1]) !== -1) {
-      Ical.fromURL(
-          Ressource.createURL(
-              Ressource.getId('master2', 'info', 1, messageArray[1]), today),
-          {},
-          function(err, data) {
-            var events = []
-
-            for (var k in data) {
-              var event = data[k]
-
-              if (Moment().isSame(event.start, 'day')) {
-                if (messageArray[2] !== 'left' ||
-                    Moment().isBefore(event.start)) {
-                  events.push(event)
-                }
-              }
-            }
-            message.channel.send(EventDecorator.format(events, 'short'))
-          })
-    }
-  } else if (messageArray.length === 2 && messageArray[0] === '!tomorrow') {
-    if (Config.master2.info.specialities.indexOf(messageArray[1]) !== -1) {
-      Ical.fromURL(
-          Ressource.createURL(
-              Ressource.getId('master2', 'info', 1, messageArray[1]), 1),
-          {},
-          function(err, data) {
-            var events = []
-
-            for (var k in data) {
-              var event = data[k]
-
-              if (Moment().add(1, 'd').isSame(event.start, 'day')) {
-                events.push(event)
-              }
-            }
-
-            message.channel.send(EventDecorator.format(events, 'short'))
-          })
-    }
-  } else if (messageArray.length === 2 && messageArray[0] === '!link') {
-    if (Config.master2.info.specialities.indexOf(messageArray[1]) !== -1) {
-      message.channel.send(Config.planning + '&resources=' +
-          Ressource.getId('master2', 'info', 1, messageArray[1]))
-    }
-  } else if (messageArray[0] === '!help') {
-    message.channel.send('**Commandes** : \n' +
-        '`!now !next !today !tomorrow !link`\n\n' +
-        '**Specialities** : `info`, `aigle`, `decol`, `imagina`, `mit`, `msi`\n\n' +
-        '`!now` displays the information of the actuals classes\n' +
-        '  _usage_ : `!now <speciality>`\n\n' +
-        '`!next` displays the informations of the folowwing classes\n' +
-        '  _usage_ : `!next <speciality>`\n\n' +
-        '`!today` displays today\'s classes\n' +
-        '  _usage_ : `!today <speciality> [left]`\n\n' +
-        '`!tomorrow`  displays tomorrow\'s classes\n' +
-        '  _usage_ : `!tomorrow <speciality>`\n\n' +
-        '`!link` : creates a link to the original EDT for the wanted speciality\n' +
-        '  _usage_ : `link <speciality>`')
-  }
 })
 
 bot.login('MzU3MjMzMzk4NjcyMjYxMTIw.DJnISg.70tqAA5dx8SKiFHFrp8HTnFZkjA')
