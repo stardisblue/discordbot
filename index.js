@@ -3,12 +3,13 @@
 const Discord = require('discord.js')
 const Ical = require('ical')
 const Moment = require('moment-timezone')
-const Config = require('./config')
 
-const edt = require('./edt')
-const Ressource = require('./ressource')
-const EventFactory = require('./event-factory')
-const EventWrapper = require('./event-wrapper')
+const config = require('./config')
+const edt = require('./src/edt')
+
+const Ressource = require('./src/resource')
+const EventFactory = require('./src/event-factory')
+const EventWrapper = require('./src/event-wrapper')
 
 Moment.locale('fr')
 Moment.tz.setDefault('Europe/Paris')
@@ -54,16 +55,16 @@ bot.on('message', function(message) {
   } else if (args[0] === '!tomorrow') {
     edt.tomorrow(message, args)
   } else if (args.length === 2 && args[0] === '!link') {
-    edt.link(message, args)
+    message.channel.send(edt.link(args))
   } else if (args[0] === '!help') {
     message.channel.send(edt.help())
   }
 })
 
-bot.login('MzU3MjMzMzk4NjcyMjYxMTIw.DJnISg.70tqAA5dx8SKiFHFrp8HTnFZkjA').
+bot.login(config.discordtoken).
     then(function(string) {
-      console.log(string)
+      console.log('Connection successful :' + string)
     }).
     catch(function(reason) {
-      console.log(reason)
+      console.log('Connection failed : ' + reason.toString())
     })
