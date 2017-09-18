@@ -1,4 +1,4 @@
-"use strict"
+'use strict'
 
 const Discord = require('discord.js')
 const Ical = require('ical')
@@ -13,10 +13,10 @@ const EventWrapper = require('./event-wrapper')
 Moment.locale('fr')
 Moment.tz.setDefault('Europe/Paris')
 Moment.updateLocale('fr', {
-    calendar: {
-        sameDay: '[Auj de] LT',
-        nextDay: '[Demain de] LT',
-    },
+  calendar: {
+    sameDay: '[Auj de] LT',
+    nextDay: '[Demain de] LT',
+  },
 })
 
 // RSS : https://planning-ade.umontpellier.fr/direct/gwtdirectplanning/rss?projectId=54&resources=4800&cliendId=1505246956191&nbDays=15&since=0&login=visuFDS&password=12345678
@@ -28,36 +28,42 @@ const today = 0
 
 const bot = new Discord.Client()
 
-bot.on('ready', function () {
-    if (bot.game !== 'EDT M2 S1 INFO') {
-        bot.user.setGame('EDT M2 S1 INFO')
-    }
-    if (bot.user.username !== 'EDT Bot') {
-        bot.user.setUsername('EDT Bot')
-    }
+bot.on('ready', function() {
+  if (bot.game !== 'EDT M2 S1 INFO') {
+    bot.user.setGame('EDT M2 S1 INFO')
+  }
+  if (bot.user.username !== 'EDT Bot') {
+    bot.user.setUsername('EDT Bot')
+  }
 })
 
-bot.on('message', function (message) {
+bot.on('message', function(message) {
 
-    if (message.content.charAt(0) !== '!') {
-        return
-    }
+  if (message.content.charAt(0) !== '!') {
+    return
+  }
 
-    var args = message.content.split(' ')
+  var args = message.content.split(' ')
 
-    if (args[0] === '!now') {
-        edt.now(message, args)
-    } else if (args[0] === '!next') {
-        edt.next(message, args)
-    } else if (args[0] === '!today') {
-        edt.today(message, args)
-    } else if (args[0] === '!tomorrow') {
-        edt.tomorrow(message, args)
-    } else if (args.length === 2 && args[0] === '!link') {
-        edt.link(message, args)
-    } else if (args[0] === '!help') {
-        message.channel.send(edt.help())
-    }
+  if (args[0] === '!now') {
+    edt.now(message, args)
+  } else if (args[0] === '!next') {
+    edt.next(message, args)
+  } else if (args[0] === '!today') {
+    edt.today(message, args)
+  } else if (args[0] === '!tomorrow') {
+    edt.tomorrow(message, args)
+  } else if (args.length === 2 && args[0] === '!link') {
+    edt.link(message, args)
+  } else if (args[0] === '!help') {
+    message.channel.send(edt.help())
+  }
 })
 
-bot.login('MzU3MjMzMzk4NjcyMjYxMTIw.DJnISg.70tqAA5dx8SKiFHFrp8HTnFZkjA')
+bot.login('MzU3MjMzMzk4NjcyMjYxMTIw.DJnISg.70tqAA5dx8SKiFHFrp8HTnFZkjA').
+    then(function(string) {
+      console.log(string)
+    }).
+    catch(function(reason) {
+      console.log(reason)
+    })
