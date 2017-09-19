@@ -45,4 +45,3 @@ var EventFactory = /** @class */ (function () {
     return EventFactory;
 }());
 exports.default = EventFactory;
-//# sourceMappingURL=EventFactory.js.map

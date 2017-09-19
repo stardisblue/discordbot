@@ -8,10 +8,9 @@ import EventWrapper from "./EventWrapper";
 import Config = require("../config");
 
 
-export default class EmploiDuTemps {
-    private static currentDay: number = 0;
+export default class Planning {
 
-    static now(message: Message, args: string[]) {
+    static now(message: Message, args: string[]): void {
         if (args.length !== 2) {
             message.channel.send("`incorrect number of arguments`");
             return;
@@ -24,7 +23,7 @@ export default class EmploiDuTemps {
 
         ical.fromURL(
             Resource.createURL(
-                Resource.getId("master2", "info", 1, args[1]), EmploiDuTemps.currentDay),
+                Resource.getId("master2", "info", 1, args[1]), 0),
             {},
             (err, data) => {
                 const events = EventFactory.importData(data)
@@ -35,7 +34,7 @@ export default class EmploiDuTemps {
 
     }
 
-    static next(message: Message, args: string[]) {
+    static next(message: Message, args: string[]): void {
         if (args.length !== 2) {
             message.channel.send("`incorrect number of arguments`");
             return;
@@ -75,7 +74,7 @@ export default class EmploiDuTemps {
             });
     }
 
-    static today(message: Message, args: string[]) {
+    static today(message: Message, args: string[]): void {
         if (args.length < 2) {
             message.channel.send("`incorrect number of arguments`");
             return;
@@ -92,7 +91,7 @@ export default class EmploiDuTemps {
 
         ical.fromURL(
             Resource.createURL(
-                Resource.getId("master2", "info", 1, args[1]), EmploiDuTemps.currentDay),
+                Resource.getId("master2", "info", 1, args[1]), 1),
             {},
             (err, data) => {
                 const events: EventWrapper[] = EventFactory.importData(data).filter((event) => {
@@ -109,7 +108,7 @@ export default class EmploiDuTemps {
             });
     }
 
-    static tomorrow(message: Message, args: string[]) {
+    static tomorrow(message: Message, args: string[]): void {
         if (args.length !== 2) {
             message.channel.send("`incorrect number of arguments`");
             return;
@@ -133,7 +132,7 @@ export default class EmploiDuTemps {
 
     }
 
-    static link(args: string[]) {
+    static link(args: string[]): string {
         if (args.length !== 2) {
             return "`incorrect number of arguments`";
         }
@@ -142,12 +141,12 @@ export default class EmploiDuTemps {
             return args[1] + " is not in the list";
         }
 
-        return "[EDT " + args[1] + "](" + Config.planning + "&resources=" +
-            Resource.getId("master2", "info", 1, args[1]) + ")";
+        return Config.planning + "&resources=" +
+            Resource.getId("master2", "info", 1, args[1]);
 
     }
 
-    static help() {
+    static help(): string {
         return "**Commandes** : \n" +
             "`!now !next !today !tomorrow !link`\n\n" +
             "**Specialities** : `info`, `aigle`, `decol`, `imagina`, `mit`, `msi`\n\n" +

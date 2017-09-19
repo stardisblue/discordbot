@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Discord = require("discord.js");
 var moment = require("moment-timezone");
-var EmploiDuTemps_1 = require("./src/EmploiDuTemps");
+var Planning_1 = require("./src/Planning");
 var config = require("./config.json");
 moment.locale("fr");
 moment.tz.setDefault("Europe/Paris");
@@ -33,22 +33,22 @@ bot.on("message", function (message) {
     }
     var args = message.content.split(" ");
     if (args[0] === "!now") {
-        EmploiDuTemps_1.default.now(message, args);
+        Planning_1.default.now(message, args);
     }
     else if (args[0] === "!next") {
-        EmploiDuTemps_1.default.next(message, args);
+        Planning_1.default.next(message, args);
     }
     else if (args[0] === "!today") {
-        EmploiDuTemps_1.default.today(message, args);
+        Planning_1.default.today(message, args);
     }
     else if (args[0] === "!tomorrow") {
-        EmploiDuTemps_1.default.tomorrow(message, args);
+        Planning_1.default.tomorrow(message, args);
     }
-    else if (args.length === 2 && args[0] === "!link") {
-        message.channel.send(EmploiDuTemps_1.default.link(args));
+    else if (args[0] === "!link") {
+        message.channel.send(Planning_1.default.link(args));
     }
     else if (args[0] === "!help") {
-        message.channel.send(EmploiDuTemps_1.default.help());
+        message.channel.send(Planning_1.default.help());
     }
 });
 bot.login(config.discordtoken).then(function (string) {
@@ -56,4 +56,3 @@ bot.login(config.discordtoken).then(function (string) {
 }).catch(function (reason) {
     console.error("Connection failed : " + reason.toString());
 });
-//# sourceMappingURL=index.js.map

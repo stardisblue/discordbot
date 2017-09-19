@@ -36,4 +36,3 @@ var EventWrapper = /** @class */ (function () {
     return EventWrapper;
 }());
 exports.default = EventWrapper;
-//# sourceMappingURL=EventWrapper.js.map

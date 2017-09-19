@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import * as moment from "moment-timezone";
 
-import EmploiDuTemps from "./src/EmploiDuTemps";
+import EmploiDuTemps from "./src/Planning";
 import config = require("./config.json");
 
 moment.locale("fr");
@@ -49,7 +49,7 @@ bot.on("message", function (message) {
         EmploiDuTemps.today(message, args);
     } else if (args[0] === "!tomorrow") {
         EmploiDuTemps.tomorrow(message, args);
-    } else if (args.length === 2 && args[0] === "!link") {
+    } else if (args[0] === "!link") {
         message.channel.send(EmploiDuTemps.link(args));
     } else if (args[0] === "!help") {
         message.channel.send(EmploiDuTemps.help());

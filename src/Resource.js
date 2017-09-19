@@ -21,4 +21,3 @@ var Resource = /** @class */ (function () {
     return Resource;
 }());
 exports.default = Resource;
-//# sourceMappingURL=resource.js.map
