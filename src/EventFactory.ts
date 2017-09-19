@@ -9,9 +9,9 @@ export default class EventFactory {
         const events = Object.getOwnPropertyNames(data).map(value => new EventWrapper(data[value]));
 
         events.sort(function (a, b) {
-            if (moment(a.start).isBefore(b.start)) {
+            if (a.start.isBefore(b.start)) {
                 return -1;
-            } else if (moment(a.start).isAfter(b.start)) {
+            } else if (a.start.isAfter(b.start)) {
                 return 1;
             }
 
